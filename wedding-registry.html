@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Priya & Rahul - Wedding Registry | G-Link</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .registry-hero { position: relative; min-height: 300px; background: var(--bg-card); display: flex; align-items: center; justify-content: center; text-align: center; padding: 3rem 2rem; border-bottom: 1px solid var(--border); }
+    .registry-hero h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); color: var(--gold-light); }
+    .registry-hero p { color: var(--text-muted); margin-top: 0.5rem; }
+    .registry-content { max-width: 800px; margin: 0 auto; padding: 2rem; }
+    .family-tree-placeholder { background: var(--bg-card); border-radius: var(--radius); padding: 3rem; text-align: center; border: 2px dashed rgba(212,175,55,0.3); margin: 2rem 0; }
+    .tree-leaf { display: inline-block; width: 24px; height: 24px; background: var(--yellow); border-radius: 50%; margin: 4px; opacity: 0.6; animation: pulse 2s infinite; }
+    .tree-leaf:nth-child(2n) { opacity: 0.5; }
+    .tree-leaf:nth-child(3n) { opacity: 0.7; }
+    @keyframes pulse { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; transform: scale(1.1); } }
+    .bless-btn { width: 100%; padding: 1.25rem; font-size: 1.2rem; margin: 2rem 0; }
+    .blessings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .blessing-card { padding: 1rem; background: var(--bg-card); border-radius: var(--radius); border-left: 3px solid var(--gold-primary); }
+  </style>
+</head>
+<body>
+  <div class="particles-bg" id="particles"></div>
+
+  <header>
+    <a href="index.html" class="logo">G-Link</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="wedding-registry.html">Registry</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="registry-hero">
+      <div>
+        <h1>Priya & Rahul</h1>
+        <p>March 15, 2026 • Mumbai, India</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Bless us with gold for our new beginning</p>
+      </div>
+    </section>
+
+    <section class="registry-content">
+      <div class="card" style="margin-bottom: 2rem;">
+        <h3 style="color: var(--gold-primary); margin-bottom: 1rem;">Our Story</h3>
+        <p>We met at a friend's wedding three years ago. Gold has always been a symbol of love and blessing in our families. Instead of traditional gifts, we invite you to contribute to our gold savings - a meaningful start to our journey together.</p>
+      </div>
+
+      <div class="section-title">
+        <h2>Family Tree of Blessings</h2>
+        <p>Real-time visualization - every contribution adds a golden leaf</p>
+      </div>
+      <div class="family-tree-placeholder">
+        <div id="treeLeaves"></div>
+        <p style="margin-top: 1rem; color: var(--text-muted);">Interactive 3D tree - hover on leaves to see blessings</p>
+        <div class="stats" style="margin-top: 1.5rem;">
+          <div class="stat-card"><div class="stat-value" id="treeTotal">2.4g</div><div class="stat-label">Gold Collected</div></div>
+          <div class="stat-card"><div class="stat-value" id="treeContributors">12</div><div class="stat-label">Blessings</div></div>
+          <div class="stat-card"><div class="stat-value">₹78,000</div><div class="stat-label">Goal Progress</div></div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary bless-btn" id="blessBtn">BLESS US WITH GOLD</button>
+
+      <div class="section-title">
+        <h2>Recent Blessings</h2>
+      </div>
+      <div class="blessings-grid" id="blessingsGrid">
+        <div class="blessing-card"><strong style="color: var(--gold-primary);">Amit K.</strong><br>₹5,000</div>
+        <div class="blessing-card"><strong style="color: var(--gold-primary);">Neha & Family</strong><br>₹11,000</div>
+        <div class="blessing-card"><strong style="color: var(--gold-primary);">Uncle Ramesh</strong><br>₹2,500</div>
+        <div class="blessing-card"><strong style="color: var(--gold-primary);">Office Friends</strong><br>₹3,000</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Powered by G-Link | Priya & Rahul Wedding Registry</p>
+  </footer>
+
+  <!-- Bless Modal -->
+  <div class="modal-overlay" id="blessModal">
+    <div class="modal">
+      <h3>Bless the Couple</h3>
+      <form id="blessForm">
+        <label>Amount (₹)</label>
+        <select id="blessAmount">
+          <option value="501">₹501</option>
+          <option value="1100">₹1,100</option>
+          <option value="5000">₹5,000</option>
+          <option value="11000">₹11,000</option>
+          <option value="custom">Custom</option>
+        </select>
+        <p style="font-size: 0.9rem; color: var(--gold-primary);" id="blessGoldEq">≈ 0.77g of gold</p>
+        <label>Your Blessing Message (optional)</label>
+        <textarea id="blessMessage" rows="2" placeholder="Wishing you a lifetime of happiness..."></textarea>
+        <label>Your Name</label>
+        <input type="text" id="blessName" placeholder="Your name" required>
+        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+          <button type="submit" class="btn btn-primary" style="flex: 1;">Send Blessing</button>
+          <button type="button" class="btn btn-outline" id="closeBless">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('blessAmount').addEventListener('change', () => {
+      const v = document.getElementById('blessAmount').value;
+      const amt = v === 'custom' ? 5000 : parseInt(v);
+      document.getElementById('blessGoldEq').textContent = `≈ ${(amt/6500).toFixed(2)}g of gold`;
+    });
+
+    // Tree leaves animation
+    const leaves = document.getElementById('treeLeaves');
+    for (let i = 0; i < 24; i++) {
+      const l = document.createElement('span');
+      l.className = 'tree-leaf';
+      l.style.animationDelay = (i * 0.1) + 's';
+      leaves.appendChild(l);
+    }
+
+    document.getElementById('blessBtn').addEventListener('click', () => {
+      document.getElementById('blessModal').classList.add('active');
+    });
+
+    document.getElementById('closeBless').addEventListener('click', () => {
+      document.getElementById('blessModal').classList.remove('active');
+    });
+
+    document.getElementById('blessModal').addEventListener('click', (e) => {
+      if (e.target.id === 'blessModal') document.getElementById('blessModal').classList.remove('active');
+    });
+
+    document.getElementById('blessForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('blessName').value;
+      const amount = parseInt(document.getElementById('blessAmount').value);
+      const msg = document.getElementById('blessMessage').value;
+      const card = document.createElement('div');
+      card.className = 'blessing-card';
+      card.innerHTML = `<strong style="color: var(--gold-primary);">${name}</strong><br>₹${amount.toLocaleString()}`;
+      document.getElementById('blessingsGrid').prepend(card);
+      document.getElementById('blessModal').classList.remove('active');
+      document.getElementById('blessForm').reset();
+    });
+  </script>
+</body>
+</html>

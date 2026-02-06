@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-Link - Send Gold, Spread Blessings</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="particles-bg" id="particles"></div>
+
+  <header>
+    <a href="index.html" class="logo">
+      <img src="logo.svg" alt="G-Link Logo" class="logo-img">
+    </a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="#" id="createGoldLinkBtn">Gold Link</a>
+      <a href="#" id="createRegistryBtn">Blessing Page</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Send Gold, Spread Blessings</h1>
+      <p>Gift gold by sharing a link. Create it, share the link with the person you want to send gold to, and they get real gold. For weddings, birthdays, festivals, create a blessing page where friends and family contribute. A family tree shows every gift in real time. Your gold stays in a vault until you need it.</p>
+      <div class="hero-buttons">
+        <a href="#" class="btn btn-primary" id="heroGoldLink">Gold Link</a>
+        <a href="#" class="btn btn-outline" id="heroRegistry">Blessing Page</a>
+      </div>
+    </section>
+
+    <section class="how-it-works">
+      <div class="section-title">
+        <h2>How It Works</h2>
+        <p>Three simple steps to gift gold anywhere in the world</p>
+      </div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Create</h3>
+            <p>Choose amount, personalize with message, and create your unique gold link in under 2 minutes.</p>
+          </div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Share</h3>
+            <p>Share the link with the person you want to gift. They get instant access.</p>
+          </div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Claim</h3>
+            <p>Recipient claims with one click. Keep as gold, cash out, or invest.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>Live Metrics</h2>
+        <p>Real-time platform statistics</p>
+      </div>
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-value" id="statGold">₹5.2 Crores</div>
+          <div class="stat-label">Gold gifted</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statUsers">10,000+</div>
+          <div class="stat-label">Happy users</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statWeddings">500+</div>
+          <div class="stat-label">Blessings shared</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>Use Cases</h2>
+        <p>Gift gold for every occasion</p>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <h3 style="color: var(--gold-primary);">Weddings</h3>
+          <p>Blessing pages with live family tree. Guests contribute, you see every blessing.</p>
+        </div>
+        <div class="card">
+          <h3 style="color: var(--gold-primary);">Birthdays</h3>
+          <p>Create a blessing page or send a gold link. Personal messages, instant delivery.</p>
+        </div>
+        <div class="card">
+          <h3 style="color: var(--gold-primary);">Festivals</h3>
+          <p>Diwali, Eid, Christmas. Spread blessings with real gold. Share a link, done.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>G-Link — Gold links • Blessing pages • Family tree • Secure vaults</p>
+    <p>&copy; 2026</p>
+  </footer>
+
+  <!-- Share Gold Link Modal (after creation) -->
+  <div class="modal-overlay" id="shareLinkModal">
+    <div class="modal">
+      <h3>Share your gold link</h3>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">The recipient will get this link. When they open it, they can claim their gold.</p>
+      <div class="share-link-box" id="shareLinkDisplay"></div>
+      <div class="share-buttons">
+        <button type="button" class="btn btn-primary" id="copyLinkBtn">Copy Link</button>
+        <a href="#" class="btn btn-outline" id="shareWhatsAppBtn" target="_blank">Share on WhatsApp</a>
+        <a href="#" class="btn btn-outline" id="shareEmailBtn">Share via Email</a>
+      </div>
+      <p style="margin-top: 1rem; font-size: 0.875rem;">
+        <a href="#" id="previewAsRecipient" style="color: var(--yellow);">Preview what recipient sees →</a>
+      </p>
+      <button type="button" class="btn btn-outline" style="margin-top: 1rem; width: 100%;" id="closeShareModal">Done</button>
+    </div>
+  </div>
+
+  <!-- Create Gold Link Modal -->
+  <div class="modal-overlay" id="goldLinkModal">
+    <div class="modal">
+      <h3>Create Gold Link</h3>
+      
+      <!-- Step 1: Details -->
+      <div id="goldLinkStep1">
+        <form id="goldLinkForm">
+          <label>Amount (₹)</label>
+          <select id="amount">
+            <option value="501">₹501</option>
+            <option value="1100">₹1,100</option>
+            <option value="5000">₹5,000</option>
+            <option value="11000">₹11,000</option>
+            <option value="custom">Custom</option>
+          </select>
+          <div id="customAmountDiv" style="display: none;">
+            <input type="number" id="customAmount" placeholder="Enter amount" min="500">
+          </div>
+          <p style="font-size: 0.9rem; color: var(--gold-primary); margin: -0.5rem 0 1rem;">
+            <span id="goldEquivalent">≈ 0.12g gold</span>
+          </p>
+          <label>Your Name</label>
+          <input type="text" id="senderName" placeholder="Your name" required>
+          <label>Personal Message (optional)</label>
+          <textarea id="message" rows="3" placeholder="Add a blessing message..."></textarea>
+          <label>Design Theme</label>
+          <select id="theme">
+            <option value="traditional">Traditional (Diya)</option>
+            <option value="festive">Festive (Fireworks)</option>
+            <option value="floral">Floral</option>
+            <option value="modern">Modern Minimal</option>
+          </select>
+          <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <button type="submit" class="btn btn-primary" style="flex: 1;">Proceed to Pay</button>
+            <button type="button" class="btn btn-outline" id="closeGoldLink">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 2: Payment -->
+      <div id="goldLinkStep2" style="display: none;">
+        <div class="payment-summary">
+          <div class="payment-row"><span>Gold amount</span><span id="payGoldAmount">₹0</span></div>
+          <div class="payment-row"><span>Platform fee (2%)</span><span id="payFee">₹0</span></div>
+          <div class="payment-row total"><span>Total</span><span id="payTotal">₹0</span></div>
+        </div>
+        <label style="margin-top: 1rem;">Payment method</label>
+        <div class="payment-methods">
+          <label class="payment-option"><input type="radio" name="paymentMethod" value="upi" checked> UPI (GPay, PhonePe, Paytm)</label>
+          <label class="payment-option"><input type="radio" name="paymentMethod" value="card"> Card / Debit / Credit</label>
+          <label class="payment-option"><input type="radio" name="paymentMethod" value="paypal"> PayPal</label>
+        </div>
+        <div id="upiInput" style="margin-top: 1rem;">
+          <label>UPI ID</label>
+          <input type="text" id="upiId" placeholder="yourname@upi">
+        </div>
+        <div id="cardInput" style="margin-top: 1rem; display: none;">
+          <label>Card number</label>
+          <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+          <div class="card-input-row">
+            <div><label>Expiry</label><input type="text" id="cardExpiry" placeholder="MM/YY"></div>
+            <div><label>CVV</label><input type="text" id="cardCvv" placeholder="123"></div>
+          </div>
+        </div>
+        <div id="paypalInput" style="margin-top: 1rem; display: none;">
+          <p style="font-size: 0.9rem; color: var(--text-muted);">You will be redirected to PayPal to complete payment.</p>
+        </div>
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-outline" id="backToDetails">← Back</button>
+          <button type="button" class="btn btn-primary" style="flex: 1;" id="payNowBtn">Pay & Create Link</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // Particles
+    const particles = document.getElementById('particles');
+    for (let i = 0; i < 15; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.top = Math.random() * 100 + '%';
+      p.style.animationDelay = Math.random() * 5 + 's';
+      particles.appendChild(p);
+    }
+
+    // Gold equivalent calculator
+    document.getElementById('amount').addEventListener('change', updateGoldEquivalent);
+    document.getElementById('customAmount').addEventListener('input', updateGoldEquivalent);
+
+    function updateGoldEquivalent() {
+      const sel = document.getElementById('amount').value;
+      const amt = sel === 'custom' ? parseInt(document.getElementById('customAmount').value) || 0 : parseInt(sel);
+      const grams = (amt / 6500).toFixed(2);
+      document.getElementById('goldEquivalent').textContent = `≈ ${grams}g gold (at current rate)`;
+    }
+
+    document.getElementById('amount').addEventListener('change', () => {
+      document.getElementById('customAmountDiv').style.display = 
+        document.getElementById('amount').value === 'custom' ? 'block' : 'none';
+    });
+  </script>
+</body>
+</html>

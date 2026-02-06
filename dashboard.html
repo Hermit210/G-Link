@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - G-Link</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .dashboard { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+    .dashboard-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+    .quick-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .vault-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; margin-bottom: 2rem; }
+    .vault-card h2 { color: var(--gold-primary); margin-bottom: 0.5rem; }
+    .vault-balance { font-size: 2rem; font-weight: 700; color: var(--gold-light); }
+    .vault-meta { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem; }
+    .vault-actions { display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+    .section-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .link-item, .activity-item { padding: 1rem; background: var(--bg-card); border-radius: 8px; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+    .link-item { border-left: 3px solid var(--gold-primary); }
+    .badge { font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 4px; }
+    .badge-pending { background: rgba(255,193,7,0.2); color: var(--gold-amber); }
+    .badge-claimed { background: rgba(34,197,94,0.2); color: #4ade80; }
+  </style>
+</head>
+<body>
+  <div class="particles-bg" id="particles"></div>
+
+  <header>
+    <a href="index.html" class="logo">G-Link</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="wedding-registry.html">Blessing Pages</a>
+      <a href="#" id="createGoldLinkBtn">Create Gold Link</a>
+    </nav>
+  </header>
+
+  <main class="dashboard">
+    <div class="dashboard-header">
+      <h1 style="color: var(--gold-light);">Dashboard</h1>
+      <div class="quick-actions">
+        <a href="#" class="btn btn-primary btn-sm" id="createLinkBtn">Create Gold Link</a>
+        <a href="wedding-registry.html" class="btn btn-outline btn-sm">View Blessing Pages</a>
+        <a href="claim.html" class="btn btn-outline btn-sm">Claim Gold</a>
+      </div>
+    </div>
+
+    <div class="vault-card">
+      <h2>Gold Vault</h2>
+      <div class="vault-balance" id="vaultBalance">₹0</div>
+      <div class="vault-meta">≈ <span id="vaultGrams">0</span>g gold • 24h change: +0%</div>
+      <div class="vault-actions">
+        <button class="btn btn-primary btn-sm">Add Gold</button>
+        <button class="btn btn-outline btn-sm">Withdraw</button>
+        <button class="btn btn-outline btn-sm">Stake (3-4% APY)</button>
+      </div>
+    </div>
+
+    <div class="section-row">
+      <div style="flex: 1;">
+        <h3 style="color: var(--gold-primary); margin-bottom: 1rem;">Gold Links Sent</h3>
+        <div id="linksList">
+          <p style="color: var(--text-muted);" id="noLinks">No gold links created yet. <a href="#" style="color: var(--gold-primary);" id="createFirstLink">Create one</a></p>
+        </div>
+      </div>
+      <div style="flex: 1;">
+        <h3 style="color: var(--gold-primary); margin-bottom: 1rem;">Recent Activity</h3>
+        <div id="activityList">
+          <div class="activity-item">
+            <span>Welcome to G-Link!</span>
+            <span style="color: var(--gold-primary);">Just now</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">
+      <h2>Portfolio Overview</h2>
+    </div>
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-value" id="totalGold">0g</div>
+        <div class="stat-label">Total gold owned</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="linksCount">0</div>
+        <div class="stat-label">Links created</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">₹0</div>
+        <div class="stat-label">Total value</div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>G-Link Dashboard</p>
+  </footer>
+
+  <!-- Share Gold Link Modal -->
+  <div class="modal-overlay" id="shareLinkModal">
+    <div class="modal">
+      <h3>Share your gold link</h3>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">The recipient will get this link. When they open it, they can claim their gold.</p>
+      <div class="share-link-box" id="shareLinkDisplay"></div>
+      <div class="share-buttons">
+        <button type="button" class="btn btn-primary" id="copyLinkBtn">Copy Link</button>
+        <a href="#" class="btn btn-outline" id="shareWhatsAppBtn" target="_blank">Share on WhatsApp</a>
+        <a href="#" class="btn btn-outline" id="shareEmailBtn">Share via Email</a>
+      </div>
+      <p style="margin-top: 1rem; font-size: 0.875rem;">
+        <a href="#" id="previewAsRecipient" style="color: var(--yellow);">Preview what recipient sees →</a>
+      </p>
+      <button type="button" class="btn btn-outline" style="margin-top: 1rem; width: 100%;" id="closeShareModal">Done</button>
+    </div>
+  </div>
+
+  <!-- Create Gold Link Modal -->
+  <div class="modal-overlay" id="goldLinkModal">
+    <div class="modal">
+      <h3>Create Gold Link</h3>
+      <div id="goldLinkStep1">
+        <form id="goldLinkForm">
+          <label>Amount (₹)</label>
+          <select id="amount">
+            <option value="501">₹501</option>
+            <option value="1100">₹1,100</option>
+            <option value="5000">₹5,000</option>
+            <option value="11000">₹11,000</option>
+            <option value="custom">Custom</option>
+          </select>
+          <div id="customAmountDiv" style="display: none;">
+            <input type="number" id="customAmount" placeholder="Enter amount" min="500">
+          </div>
+          <p style="font-size: 0.9rem; color: var(--gold-primary); margin: -0.5rem 0 1rem;"><span id="goldEquivalent">≈ 0.12g gold</span></p>
+          <label>Your Name</label>
+          <input type="text" id="senderName" placeholder="Your name" required>
+          <label>Personal Message (optional)</label>
+          <textarea id="message" rows="3" placeholder="Add a blessing message..."></textarea>
+          <label>Design Theme</label>
+          <select id="theme">
+            <option value="traditional">Traditional (Diya)</option>
+            <option value="festive">Festive (Fireworks)</option>
+            <option value="floral">Floral</option>
+            <option value="modern">Modern Minimal</option>
+          </select>
+          <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <button type="submit" class="btn btn-primary" style="flex: 1;">Proceed to Pay</button>
+            <button type="button" class="btn btn-outline" id="closeGoldLink">Cancel</button>
+          </div>
+        </form>
+      </div>
+      <div id="goldLinkStep2" style="display: none;">
+        <div class="payment-summary">
+          <div class="payment-row"><span>Gold amount</span><span id="payGoldAmount">₹0</span></div>
+          <div class="payment-row"><span>Platform fee (2%)</span><span id="payFee">₹0</span></div>
+          <div class="payment-row total"><span>Total</span><span id="payTotal">₹0</span></div>
+        </div>
+        <label style="margin-top: 1rem;">Payment method</label>
+        <div class="payment-methods">
+          <label class="payment-option"><input type="radio" name="paymentMethod" value="upi" checked> UPI (GPay, PhonePe, Paytm)</label>
+          <label class="payment-option"><input type="radio" name="paymentMethod" value="card"> Card / Debit / Credit</label>
+          <label class="payment-option"><input type="radio" name="paymentMethod" value="paypal"> PayPal</label>
+        </div>
+        <div id="upiInput" style="margin-top: 1rem;">
+          <label>UPI ID</label>
+          <input type="text" id="upiId" placeholder="yourname@upi">
+        </div>
+        <div id="cardInput" style="margin-top: 1rem; display: none;">
+          <label>Card number</label>
+          <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+          <div class="card-input-row">
+            <div><label>Expiry</label><input type="text" id="cardExpiry" placeholder="MM/YY"></div>
+            <div><label>CVV</label><input type="text" id="cardCvv" placeholder="123"></div>
+          </div>
+        </div>
+        <div id="paypalInput" style="margin-top: 1rem; display: none;">
+          <p style="font-size: 0.9rem; color: var(--text-muted);">You will be redirected to PayPal to complete payment.</p>
+        </div>
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-outline" id="backToDetails">← Back</button>
+          <button type="button" class="btn btn-primary" style="flex: 1;" id="payNowBtn">Pay & Create Link</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    const STORAGE_KEY = 'glink_demo_data';
+    function getStorage() {
+      try {
+        const data = localStorage.getItem(STORAGE_KEY);
+        return data ? JSON.parse(data) : { goldLinks: [], vault: 0 };
+      } catch { return { goldLinks: [], vault: 0 }; }
+    }
+
+    function renderDashboard() {
+      const data = getStorage();
+      const links = data.goldLinks || [];
+      const claimedTotal = links.filter(l => l.claimed).reduce((s, l) => s + l.amount, 0);
+      const vault = data.vault || claimedTotal;
+
+      document.getElementById('vaultBalance').textContent = `₹${vault.toLocaleString()}`;
+      document.getElementById('vaultGrams').textContent = (vault / 6500).toFixed(2);
+      document.getElementById('totalGold').textContent = (vault / 6500).toFixed(2) + 'g';
+      document.getElementById('linksCount').textContent = links.length;
+
+      const linksList = document.getElementById('linksList');
+      const noLinks = document.getElementById('noLinks');
+      if (links.length === 0) {
+        noLinks.style.display = 'block';
+        linksList.querySelectorAll('.link-item').forEach(el => el.remove());
+      } else {
+        noLinks.style.display = 'none';
+        const existing = linksList.querySelectorAll('.link-item');
+        existing.forEach(el => el.remove());
+        links.slice().reverse().slice(0, 5).forEach(link => {
+          const div = document.createElement('div');
+          div.className = 'link-item';
+          div.innerHTML = `
+            <div>
+              <strong>₹${link.amount.toLocaleString()}</strong> → ${link.senderName}
+              <br><small style="color: var(--text-muted);">glink.link/${link.id}</small>
+            </div>
+            <span class="badge ${link.claimed ? 'badge-claimed' : 'badge-pending'}">${link.claimed ? 'Claimed' : 'Pending'}</span>
+          `;
+          linksList.appendChild(div);
+        });
+      }
+    }
+
+    document.getElementById('amount').addEventListener('change', function() {
+      document.getElementById('customAmountDiv').style.display = this.value === 'custom' ? 'block' : 'none';
+      updateGoldEq();
+    });
+    document.getElementById('customAmount').addEventListener('input', updateGoldEq);
+    function updateGoldEq() {
+      const sel = document.getElementById('amount').value;
+      const amt = sel === 'custom' ? parseInt(document.getElementById('customAmount').value) || 0 : parseInt(sel);
+      document.getElementById('goldEquivalent').textContent = `≈ ${(amt/6500).toFixed(2)}g gold`;
+    }
+
+    window.addEventListener('glink:linkCreated', renderDashboard);
+
+    document.querySelectorAll('#createGoldLinkBtn, #createLinkBtn, #createFirstLink').forEach(btn => {
+      btn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (typeof openGoldLinkModal === 'function') openGoldLinkModal();
+        else document.getElementById('goldLinkModal').classList.add('active');
+      });
+    });
+    document.getElementById('closeGoldLink')?.addEventListener('click', () => document.getElementById('goldLinkModal').classList.remove('active'));
+    document.getElementById('goldLinkModal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'goldLinkModal') document.getElementById('goldLinkModal').classList.remove('active');
+    });
+    document.getElementById('closeShareModal')?.addEventListener('click', () => document.getElementById('shareLinkModal').classList.remove('active'));
+    document.getElementById('shareLinkModal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'shareLinkModal') document.getElementById('shareLinkModal').classList.remove('active');
+    });
+
+    // Particles
+    const particles = document.getElementById('particles');
+    for (let i = 0; i < 20; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.top = Math.random() * 100 + '%';
+      p.style.animationDelay = Math.random() * 5 + 's';
+      particles.appendChild(p);
+    }
+
+    renderDashboard();
+  </script>
+</body>
+</html>

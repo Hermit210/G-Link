@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You've Been Blessed! - G-Link</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .claim-page { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; }
+    .claim-card { max-width: 480px; width: 100%; text-align: center; padding: 2rem; }
+    .claim-amount { font-size: 2.5rem; font-weight: 700; color: var(--gold-light); margin: 1rem 0; }
+    .claim-message { background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius); margin: 1.5rem 0; text-align: left; border-left: 4px solid var(--gold-primary); }
+    .claim-options { display: grid; gap: 1rem; margin-top: 2rem; text-align: left; }
+    .claim-option { padding: 1rem; background: var(--bg-card); border-radius: var(--radius); border: 1px solid rgba(212,175,55,0.2); cursor: pointer; transition: var(--transition); }
+    .claim-option:hover, .claim-option.selected { border-color: var(--gold-primary); box-shadow: var(--shadow-gold); }
+    .claim-option h4 { color: var(--gold-primary); margin-bottom: 0.5rem; }
+    .success-view { display: none; }
+    .success-view.active { display: block; animation: fadeIn 0.5s; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  </style>
+</head>
+<body>
+  <div class="particles-bg" id="particles"></div>
+
+  <header>
+    <a href="index.html" class="logo">G-Link</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+  </header>
+
+  <main class="claim-page">
+    <div class="claim-card" id="claimView">
+      <h1 style="font-size: 1.75rem; color: var(--gold-primary);">You've Been Blessed! 🎉</h1>
+      <p id="senderLabel" style="color: var(--text-muted); margin-top: 0.5rem;">From <strong id="senderName">Someone special</strong></p>
+      <div class="claim-amount" id="amountDisplay">₹5,000</div>
+      <p id="goldGrams" style="color: var(--gold-primary);">≈ 0.77g of gold</p>
+      <div class="claim-message" id="messageBox" style="display: none;">
+        <strong>Message:</strong>
+        <p id="messageText" style="margin-top: 0.5rem;"></p>
+      </div>
+      <button class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem; margin-top: 1.5rem;" id="claimBtn">
+        CLAIM YOUR GOLD
+      </button>
+      <div class="claim-options" id="optionsSection" style="display: none;">
+        <h3 style="color: var(--gold-primary); margin-bottom: 1rem;">Choose how to receive your gold:</h3>
+        <div class="claim-option selected" data-option="vault">
+          <h4>✓ Create G-Link Vault (Recommended)</h4>
+          <p>Just email + password. Gold saved automatically. 3-4% APY.</p>
+        </div>
+        <div class="claim-option" data-option="cashout">
+          <h4>Cash Out Directly</h4>
+          <p>Enter bank details. Money in 1-2 business days.</p>
+        </div>
+        <div class="claim-option" data-option="crypto">
+          <h4>Advanced (Crypto Users)</h4>
+          <p>Provide Solana wallet. Instant transfer.</p>
+        </div>
+        <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" id="confirmClaim">Confirm & Claim</button>
+      </div>
+    </div>
+
+    <div class="claim-card success-view" id="successView">
+      <h1 style="font-size: 2rem; color: var(--gold-light);">🎉 Success!</h1>
+      <p style="margin: 1rem 0;">Your gold has been claimed and saved to your G-Link vault.</p>
+      <p style="color: var(--gold-primary); font-weight: 600;" id="finalAmount"></p>
+      <a href="dashboard.html" class="btn btn-primary" style="margin-top: 1.5rem;">Go to Dashboard</a>
+      <a href="index.html" class="btn btn-outline" style="margin-top: 0.5rem; display: inline-block;">Back to Home</a>
+    </div>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    const STORAGE_KEY = 'glink_demo_data';
+
+    function getStorage() {
+      try {
+        const data = localStorage.getItem(STORAGE_KEY);
+        return data ? JSON.parse(data) : { goldLinks: [] };
+      } catch {
+        return { goldLinks: [] };
+      }
+    }
+
+    function setStorage(data) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    // Particles
+    const particles = document.getElementById('particles');
+    for (let i = 0; i < 25; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.top = Math.random() * 100 + '%';
+      p.style.animationDelay = Math.random() * 5 + 's';
+      particles.appendChild(p);
+    }
+
+    let linkData = null;
+    if (id) {
+      const data = getStorage();
+      linkData = data.goldLinks?.find(l => l.id === id);
+    }
+
+    if (linkData) {
+      document.getElementById('senderName').textContent = linkData.senderName || 'Someone special';
+      document.getElementById('amountDisplay').textContent = `₹${linkData.amount.toLocaleString()}`;
+      document.getElementById('goldGrams').textContent = `≈ ${(linkData.amount / 6500).toFixed(2)}g of gold`;
+      if (linkData.message) {
+        document.getElementById('messageBox').style.display = 'block';
+        document.getElementById('messageText').textContent = linkData.message;
+      }
+    } else {
+      document.getElementById('senderName').textContent = 'Demo Sender';
+      document.getElementById('amountDisplay').textContent = '₹5,000';
+      document.getElementById('goldGrams').textContent = '≈ 0.77g of gold';
+    }
+
+    let selectedOption = 'vault';
+    document.querySelectorAll('.claim-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        document.querySelectorAll('.claim-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        selectedOption = opt.dataset.option;
+      });
+    });
+
+    document.getElementById('claimBtn').addEventListener('click', () => {
+      document.getElementById('claimBtn').style.display = 'none';
+      document.getElementById('optionsSection').style.display = 'block';
+    });
+
+    document.getElementById('confirmClaim').addEventListener('click', () => {
+      const amt = linkData ? linkData.amount : 5000;
+      if (linkData && id) {
+        const data = getStorage();
+        const idx = data.goldLinks.findIndex(l => l.id === id);
+        if (idx >= 0) {
+          data.goldLinks[idx].claimed = true;
+          data.vault = (data.vault || 0) + amt;
+        }
+        setStorage(data);
+      }
+      document.getElementById('claimView').style.display = 'none';
+      document.getElementById('successView').classList.add('active');
+      document.getElementById('finalAmount').textContent = `₹${amt.toLocaleString()} added to your vault!`;
+    });
+  </script>
+</body>
+</html>
