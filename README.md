@@ -28,13 +28,20 @@ HTML, CSS, JavaScript (no build step). Data persists in `localStorage` for demo 
    - **Wedding Registry** → Click "Bless Us With Gold" → Add contribution
    - **Dashboard** → View vault, links, and activity
 
+## UI Improvements
+
+- Custom G-Link logo with golden gradient and link icon
+- Improved "How It Works" section with numbered steps and hover effects
+- Shortened button text for better mobile experience
+- Enhanced responsive design for all screen sizes
+
 ## Color Theme
 
 All colors are gold-related:
-- Primary: `#D4AF37`
-- Dark: `#B8860B`
+- Primary: `#E6B800`
+- Dark: `#B89500`
 - Light: `#FFD700`
-- Backgrounds: dark brown/gold tones
+- Backgrounds: dark black with gold accents
 
 ## Responsive
 
