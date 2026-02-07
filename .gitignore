@@ -1,0 +1,4 @@
+node_modules/
+g-link-react/
+.DS_Store
+*.log

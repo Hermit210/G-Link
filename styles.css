@@ -12,7 +12,11 @@
   --text-muted: #888;
   --border: rgba(230, 184, 0, 0.15);
   --radius: 10px;
-  --transition: all 0.2s ease;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --pulse: pulse 2s infinite;
+  --bounce: bounce 0.6s ease-out;
+  --slide-in: slideIn 0.5s ease-out;
+  --fade-in: fadeIn 0.8s ease-out;
   --shadow-gold: 0 2px 8px rgba(0, 0, 0, 0.2);
   --gold-primary: var(--yellow);
   --gold-light: var(--yellow);
@@ -59,6 +63,27 @@ body {
 @keyframes float {
   0%, 100% { transform: translate(0, 0); opacity: 0.08; }
   50% { transform: translate(10px, -15px); opacity: 0.12; }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+}
+
+@keyframes slideIn {
+  0% { transform: translateX(-100%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 /* Header */
@@ -141,6 +166,7 @@ nav a:hover {
 
 .btn-primary:hover {
   background: var(--yellow-muted);
+  animation: pulse 2s infinite;
 }
 
 .btn-outline {
@@ -168,6 +194,7 @@ nav a:hover {
   max-width: 720px;
   margin: 0 auto;
   width: 100%;
+  animation: fadeIn 0.8s ease-out;
 }
 
 .hero h1 {
@@ -482,6 +509,27 @@ footer {
   border-top: 1px solid var(--border);
 }
 
+.footer-links {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 2.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  padding-right: 2rem;
+}
+
+.footer-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.footer-links a:hover {
+  color: var(--yellow);
+}
+
 /* Grid layouts */
 .grid-2 {
   display: grid;
@@ -581,6 +629,20 @@ footer {
 }
 
 @media (max-width: 480px) {
+  .hero {
+    padding: 2.5rem 1rem;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero-how h2 {
+    font-size: 1.5rem;
+  }
+
   header {
     padding: 0.75rem 1rem;
   }
@@ -660,4 +722,15 @@ footer {
   .vault-balance {
     font-size: 1.5rem !important;
   }
+}
+
+/* Light Theme */
+.light-theme {
+  --bg-black: #f8f8f8;
+  --bg-card: #ffffff;
+  --bg-elevated: #f0f0f0;
+  --bg-medium: #e8e8e8;
+  --text-light: #1a1a1a;
+  --text-muted: #666666;
+  --border: rgba(230, 184, 0, 0.3);
 }

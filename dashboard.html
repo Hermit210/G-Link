@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - G-Link</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     .dashboard { max-width: 1100px; margin: 0 auto; padding: 2rem; }
     .dashboard-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
@@ -26,11 +27,13 @@
   <div class="particles-bg" id="particles"></div>
 
   <header>
-    <a href="index.html" class="logo">G-Link</a>
+    <a href="index.html" class="logo">
+      <img src="logo.svg" alt="G-Link Logo" class="logo-img">
+    </a>
     <nav>
       <a href="index.html">Home</a>
       <a href="dashboard.html">Dashboard</a>
-      <a href="wedding-registry.html">Blessing Pages</a>
+      <a href="wedding-registry.html">Blessing</a>
       <a href="#" id="createGoldLinkBtn">Create Gold Link</a>
     </nav>
   </header>
@@ -40,7 +43,7 @@
       <h1 style="color: var(--gold-light);">Dashboard</h1>
       <div class="quick-actions">
         <a href="#" class="btn btn-primary btn-sm" id="createLinkBtn">Create Gold Link</a>
-        <a href="wedding-registry.html" class="btn btn-outline btn-sm">View Blessing Pages</a>
+        <a href="wedding-registry.html" class="btn btn-outline btn-sm">View Blessing</a>
         <a href="claim.html" class="btn btn-outline btn-sm">Claim Gold</a>
       </div>
     </div>
@@ -90,6 +93,9 @@
         <div class="stat-value">₹0</div>
         <div class="stat-label">Total value</div>
       </div>
+    </div>
+    <div class="chart-container" style="margin-top: 2rem;">
+      <canvas id="goldChart" width="400" height="200"></canvas>
     </div>
   </main>
 
@@ -269,6 +275,37 @@
       p.style.animationDelay = Math.random() * 5 + 's';
       particles.appendChild(p);
     }
+
+    // Chart
+    const ctx = document.getElementById('goldChart').getContext('2d');
+    const data = JSON.parse(localStorage.getItem('glinkData')) || {};
+    const vault = data.vault || 0;
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Current'],
+            datasets: [{
+                label: 'Gold Value (₹)',
+                data: [0, vault * 0.2, vault * 0.5, vault * 0.8, vault],
+                borderColor: 'var(--yellow)',
+                backgroundColor: 'rgba(230, 184, 0, 0.1)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 
     renderDashboard();
   </script>

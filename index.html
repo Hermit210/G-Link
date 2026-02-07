@@ -17,7 +17,8 @@
       <a href="index.html">Home</a>
       <a href="dashboard.html">Dashboard</a>
       <a href="#" id="createGoldLinkBtn">Gold Link</a>
-      <a href="#" id="createRegistryBtn">Blessing Page</a>
+      <a href="#" id="createRegistryBtn">Blessing</a>
+      <button id="themeToggle" class="btn btn-outline" style="margin-left: auto;">🌙</button>
     </nav>
   </header>
 
@@ -26,8 +27,8 @@
       <h1>Send Gold, Spread Blessings</h1>
       <p>Gift gold by sharing a link. Create it, share the link with the person you want to send gold to, and they get real gold. For weddings, birthdays, festivals, create a blessing page where friends and family contribute. A family tree shows every gift in real time. Your gold stays in a vault until you need it.</p>
       <div class="hero-buttons">
-        <a href="#" class="btn btn-primary" id="heroGoldLink">Gold Link</a>
-        <a href="#" class="btn btn-outline" id="heroRegistry">Blessing Page</a>
+        <a href="#" class="btn btn-primary" id="heroGoldLink" title="Create a sharable gold link">Gold Link</a>
+        <a href="#" class="btn btn-outline" id="heroRegistry" title="Create a wedding blessing page">Blessing Page</a>
       </div>
     </section>
 
@@ -108,6 +109,13 @@
   </main>
 
   <footer>
+    <div class="footer-links">
+      <a href="#about">About</a>
+      <a href="#how-it-works">How it Works</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#terms">Terms</a>
+      <a href="#contact">Contact</a>
+    </div>
     <p>G-Link — Gold links • Blessing pages • Family tree • Secure vaults</p>
     <p>&copy; 2026</p>
   </footer>
@@ -210,14 +218,33 @@
   <script>
     // Particles
     const particles = document.getElementById('particles');
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 20; i++) {
       const p = document.createElement('div');
       p.className = 'particle';
       p.style.left = Math.random() * 100 + '%';
       p.style.top = Math.random() * 100 + '%';
       p.style.animationDelay = Math.random() * 5 + 's';
+      p.style.width = p.style.height = (Math.random() * 4 + 2) + 'px';
+      p.style.opacity = (Math.random() * 0.4 + 0.1);
       particles.appendChild(p);
     }
+
+    // Mouse interaction for particles
+    document.addEventListener('mousemove', (e) => {
+      const mouseX = e.clientX / window.innerWidth * 100;
+      const mouseY = e.clientY / window.innerHeight * 100;
+      const ps = document.querySelectorAll('.particle');
+      ps.forEach((p) => {
+        const pX = parseFloat(p.style.left);
+        const pY = parseFloat(p.style.top);
+        const dx = mouseX - pX;
+        const dy = mouseY - pY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const force = Math.min(1 / (distance + 1), 0.05);
+        p.style.left = (pX + dx * force) + '%';
+        p.style.top = (pY + dy * force) + '%';
+      });
+    });
 
     // Gold equivalent calculator
     document.getElementById('amount').addEventListener('change', updateGoldEquivalent);
@@ -233,6 +260,14 @@
     document.getElementById('amount').addEventListener('change', () => {
       document.getElementById('customAmountDiv').style.display = 
         document.getElementById('amount').value === 'custom' ? 'block' : 'none';
+    });
+  </script>
+  <script>
+    // Theme toggle
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('light-theme');
+      const icon = document.getElementById('themeToggle');
+      icon.textContent = document.body.classList.contains('light-theme') ? '☀️' : '🌙';
     });
   </script>
 </body>
